@@ -15,10 +15,27 @@ import {
   Sparkles,
   ExternalLink,
   ShieldCheck,
+  RefreshCw,
 } from 'lucide-react';
-import Button from '../../components/common/Button';
-import Card from '../../components/common/Card';
-import Badge from '../../components/common/Badge';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '@/components/ui/card';
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from '@/components/ui/table';
+import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
 
 export default function DashboardPage() {
   const stats = [
@@ -28,7 +45,7 @@ export default function DashboardPage() {
       change: '+2 this month',
       trend: 'up',
       icon: FileText,
-      color: 'text-indigo-600 bg-indigo-50 border-indigo-100',
+      color: 'text-indigo-600 bg-indigo-50 border-indigo-100 dark:bg-indigo-950/50 dark:border-indigo-900 dark:text-indigo-400',
     },
     {
       label: 'Total Submissions',
@@ -36,7 +53,7 @@ export default function DashboardPage() {
       change: '+18.4% vs last cycle',
       trend: 'up',
       icon: Inbox,
-      color: 'text-sky-600 bg-sky-50 border-sky-100',
+      color: 'text-sky-600 bg-sky-50 border-sky-100 dark:bg-sky-950/50 dark:border-sky-900 dark:text-sky-400',
     },
     {
       label: 'Verified Submissions',
@@ -44,7 +61,7 @@ export default function DashboardPage() {
       change: '75.6% auto-approved',
       trend: 'up',
       icon: CheckCircle2,
-      color: 'text-emerald-600 bg-emerald-50 border-emerald-100',
+      color: 'text-emerald-600 bg-emerald-50 border-emerald-100 dark:bg-emerald-950/50 dark:border-emerald-900 dark:text-emerald-400',
     },
     {
       label: 'Flagged for Audit',
@@ -52,7 +69,7 @@ export default function DashboardPage() {
       change: 'Requires manual review',
       trend: 'warning',
       icon: AlertTriangle,
-      color: 'text-amber-600 bg-amber-50 border-amber-100',
+      color: 'text-amber-600 bg-amber-50 border-amber-100 dark:bg-amber-950/50 dark:border-amber-900 dark:text-amber-400',
     },
   ];
 
@@ -95,7 +112,7 @@ export default function DashboardPage() {
     },
     {
       id: 'SUB-9397',
-      form: 'Employee Travel Reimbursement',
+      form: 'Employee Travel Expense',
       applicant: 'Vikram Joshi (EMP-4102)',
       date: '3 hours ago',
       status: 'PENDING',
@@ -104,32 +121,49 @@ export default function DashboardPage() {
     },
   ];
 
+  const handleRefresh = () => {
+    toast.success('Telemetry updated to latest snapshot');
+  };
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Page Title & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            System Overview & Verification Center
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Real-time telemetry on dynamic forms, ledger correlations, and automated verification states.
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+              Verification Telemetry & Overview
+            </h1>
+            <Badge variant="purple" className="text-[10px]">
+              Live
+            </Badge>
+          </div>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Real-time pipeline telemetry on dynamic forms, ledger correlations, and automated verification states.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            className="text-xs h-8"
+          >
+            <RefreshCw className="w-3.5 h-3.5 mr-1 text-muted-foreground" />
+            <span>Sync</span>
+          </Button>
+
           <Link to="/admin/forms">
-            <Button variant="outline" size="sm" icon={<FileText className="w-3.5 h-3.5" />}>
-              All Forms
+            <Button variant="outline" size="sm" className="text-xs h-8">
+              <FileText className="w-3.5 h-3.5 mr-1" />
+              <span>Forms Directory</span>
             </Button>
           </Link>
           <Link to="/admin/forms/create">
-            <Button
-              variant="primary"
-              size="sm"
-              icon={<PlusCircle className="w-3.5 h-3.5" />}
-            >
-              New Form
+            <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs h-8 shadow-xs">
+              <PlusCircle className="w-3.5 h-3.5 mr-1" />
+              <span>New Form</span>
             </Button>
           </Link>
         </div>
@@ -140,22 +174,25 @@ export default function DashboardPage() {
         {stats.map((stat, idx) => {
           const Icon = stat.icon;
           return (
-            <Card key={idx} hover className="border-slate-200">
+            <Card
+              key={idx}
+              className="p-4 border-border/70 hover:shadow-sm hover:border-border transition-all duration-200"
+            >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                   {stat.label}
                 </span>
                 <div
-                  className={`h-9 w-9 rounded-lg border flex items-center justify-center ${stat.color}`}
+                  className={`h-8 w-8 rounded-lg border flex items-center justify-center ${stat.color}`}
                 >
-                  <Icon className="w-4.5 h-4.5" />
+                  <Icon className="w-4 h-4" />
                 </div>
               </div>
-              <div className="mt-4">
-                <div className="text-2xl font-bold text-slate-900 font-mono">
+              <div className="mt-3">
+                <div className="text-2xl font-bold text-foreground font-mono tracking-tight">
                   {stat.value}
                 </div>
-                <p className="mt-1 text-xs text-slate-500 font-medium">
+                <p className="mt-0.5 text-xs text-muted-foreground font-medium">
                   {stat.change}
                 </p>
               </div>
@@ -165,196 +202,223 @@ export default function DashboardPage() {
       </div>
 
       {/* Verification Health & Quick Workflows */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Verification Status Distribution */}
-        <Card
-          title="Verification Status Breakdown"
-          subtitle="Distribution of current submission outcomes"
-          className="lg:col-span-1"
-        >
-          <div className="space-y-4">
+        <Card className="lg:col-span-1 border-border/70 p-5">
+          <CardHeader className="p-0 pb-4">
+            <CardTitle className="text-sm font-bold text-foreground">
+              Verification Outcomes
+            </CardTitle>
+            <CardDescription className="text-xs text-muted-foreground">
+              Lifecycle status breakdown across all submissions
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="p-0 space-y-3.5">
             <div>
               <div className="flex items-center justify-between text-xs font-medium mb-1">
-                <span className="flex items-center gap-1.5 text-emerald-700">
+                <span className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400">
                   <CheckCircle2 className="w-3.5 h-3.5" /> VERIFIED (1,120)
                 </span>
-                <span className="font-semibold text-slate-700">75.6%</span>
+                <span className="font-semibold text-foreground">75.6%</span>
               </div>
-              <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+              <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                 <div className="h-full bg-emerald-500 rounded-full" style={{ width: '75.6%' }} />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between text-xs font-medium mb-1">
-                <span className="flex items-center gap-1.5 text-amber-700">
+                <span className="flex items-center gap-1.5 text-amber-700 dark:text-amber-400">
                   <AlertTriangle className="w-3.5 h-3.5" /> FLAGGED (184)
                 </span>
-                <span className="font-semibold text-slate-700">12.4%</span>
+                <span className="font-semibold text-foreground">12.4%</span>
               </div>
-              <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+              <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                 <div className="h-full bg-amber-500 rounded-full" style={{ width: '12.4%' }} />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between text-xs font-medium mb-1">
-                <span className="flex items-center gap-1.5 text-rose-700">
+                <span className="flex items-center gap-1.5 text-rose-700 dark:text-rose-400">
                   <XCircle className="w-3.5 h-3.5" /> INVALID (142)
                 </span>
-                <span className="font-semibold text-slate-700">9.6%</span>
+                <span className="font-semibold text-foreground">9.6%</span>
               </div>
-              <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+              <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                 <div className="h-full bg-rose-500 rounded-full" style={{ width: '9.6%' }} />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between text-xs font-medium mb-1">
-                <span className="flex items-center gap-1.5 text-sky-700">
+                <span className="flex items-center gap-1.5 text-sky-700 dark:text-sky-400">
                   <Clock className="w-3.5 h-3.5" /> PENDING (36)
                 </span>
-                <span className="font-semibold text-slate-700">2.4%</span>
+                <span className="font-semibold text-foreground">2.4%</span>
               </div>
-              <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+              <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                 <div className="h-full bg-sky-500 rounded-full" style={{ width: '2.4%' }} />
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-100">
-              <Link to="/admin/submissions" className="text-xs text-indigo-600 font-semibold hover:underline flex items-center justify-between">
-                <span>View Full Submissions Ledger</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-          </div>
+            <Separator className="my-2" />
+
+            <Link
+              to="/admin/submissions"
+              className="text-xs text-indigo-600 hover:text-indigo-700 font-semibold flex items-center justify-between pt-1"
+            >
+              <span>Explore Submissions Ledger</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </CardContent>
         </Card>
 
-        {/* Quick Launch & Collaboration Roadmap */}
-        <Card
-          title="Subsystem Architecture & Team Roadmap"
-          subtitle="Collaborative modules across Shresht, Yash, and Gauri"
-          className="lg:col-span-2"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="rounded-lg border border-slate-200 bg-slate-50/70 p-3.5">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-slate-800">
-                  Frontend Foundation
-                </span>
-                <Badge variant="purple" size="sm">
-                  Shresht Soni
-                </Badge>
+        {/* Subsystem Architecture & Team Roadmap */}
+        <Card className="lg:col-span-2 border-border/70 p-5">
+          <CardHeader className="p-0 pb-4">
+            <CardTitle className="text-sm font-bold text-foreground">
+              Module Architecture & Team Coordination
+            </CardTitle>
+            <CardDescription className="text-xs text-muted-foreground">
+              Collaborative modules across Shresht (Frontend), Yash (Backend), and Gauri (Design System)
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="p-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div className="rounded-lg border border-border/70 bg-card p-3.5 shadow-2xs">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-bold text-foreground">
+                    Frontend Foundation
+                  </span>
+                  <Badge variant="purple" className="text-[10px]">
+                    Shresht Soni
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+                  Landing, Login, Dashboard, Forms Directory, and Interactive Form Builder.
+                </p>
+                <div className="flex gap-2">
+                  <Link to="/admin/forms">
+                    <Button variant="outline" size="sm" className="text-xs h-7.5">
+                      Open Forms
+                    </Button>
+                  </Link>
+                  <Link to="/admin/forms/create">
+                    <Button size="sm" className="text-xs h-7.5 bg-indigo-600 hover:bg-indigo-700 text-white shadow-2xs">
+                      Open Builder
+                    </Button>
+                  </Link>
+                </div>
               </div>
-              <p className="text-xs text-slate-600 mb-3">
-                Landing, Login, Dashboard, Forms Directory, and Interactive Form Builder.
-              </p>
-              <div className="flex gap-2">
-                <Link to="/admin/forms">
-                  <Button variant="outline" size="sm">
-                    Open Forms
-                  </Button>
-                </Link>
-                <Link to="/admin/forms/create">
-                  <Button variant="primary" size="sm">
-                    Open Builder
-                  </Button>
-                </Link>
+
+              <div className="rounded-lg border border-border/70 bg-card p-3.5 shadow-2xs">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-bold text-foreground">
+                    Design System & Review
+                  </span>
+                  <Badge variant="warning" className="text-[10px]">
+                    Gauri Upadhyay
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+                  Master Ledger, Public Form View, Submissions List & Audit Details.
+                </p>
+                <div className="flex gap-2">
+                  <Link to="/admin/ledger">
+                    <Button variant="outline" size="sm" className="text-xs h-7.5">
+                      Master Ledger
+                    </Button>
+                  </Link>
+                  <Link to="/admin/submissions">
+                    <Button variant="outline" size="sm" className="text-xs h-7.5">
+                      Submissions
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
 
-            <div className="rounded-lg border border-slate-200 bg-slate-50/70 p-3.5">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-slate-800">
-                  Design System & Review
-                </span>
-                <Badge variant="warning" size="sm">
-                  Gauri Upadhyay
-                </Badge>
-              </div>
-              <p className="text-xs text-slate-600 mb-3">
-                Master Ledger, Public Form View, Submissions List & Audit Details.
-              </p>
-              <div className="flex gap-2">
-                <Link to="/admin/ledger">
-                  <Button variant="secondary" size="sm">
-                    Master Ledger
-                  </Button>
-                </Link>
-                <Link to="/admin/submissions">
-                  <Button variant="secondary" size="sm">
-                    Submissions
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
+            <Separator className="my-4" />
 
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span className="flex items-center gap-1.5 font-medium">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              Backend Foundation: Completed by Yash Sharma (`server/` Express + Mongo)
-            </span>
-            <span className="font-mono text-[11px] text-slate-400">
-              API Base: /api
-            </span>
-          </div>
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5 font-medium text-[11px]">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                Backend Foundation: Completed by Yash Sharma (`server/` Express + Mongo)
+              </span>
+              <span className="font-mono text-[10px] text-muted-foreground">
+                API Base: /api
+              </span>
+            </div>
+          </CardContent>
         </Card>
       </div>
 
-      {/* Recent Submissions Table */}
-      <Card
-        title="Live Submissions Telemetry"
-        subtitle="Recent applications passing through OCR and master ledger matching"
-        action={
+      {/* Recent Submissions Table with shadcn Table component */}
+      <Card className="border-border/70 overflow-hidden">
+        <CardHeader className="p-5 pb-3 border-b border-border/70 flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="text-sm font-bold text-foreground">
+              Live Submissions Telemetry
+            </CardTitle>
+            <CardDescription className="text-xs text-muted-foreground">
+              Recent incoming applications passing through OCR and master ledger matching
+            </CardDescription>
+          </div>
           <Link to="/admin/submissions">
-            <Button variant="ghost" size="sm" icon={<ExternalLink className="w-3.5 h-3.5" />} iconPosition="right">
-              View All
+            <Button variant="ghost" size="sm" className="text-xs h-7.5 text-muted-foreground hover:text-foreground">
+              <span>View All</span>
+              <ExternalLink className="w-3 h-3 ml-1" />
             </Button>
           </Link>
-        }
-        bodyClassName="p-0 overflow-x-auto"
-      >
-        <table className="w-full text-left text-xs border-collapse">
-          <thead>
-            <tr className="border-b border-slate-200 bg-slate-50/80 text-slate-500 uppercase tracking-wider font-semibold">
-              <th className="px-6 py-3">Tracking ID</th>
-              <th className="px-6 py-3">Form Name</th>
-              <th className="px-6 py-3">Applicant / Record</th>
-              <th className="px-6 py-3">Status</th>
-              <th className="px-6 py-3">OCR Confidence</th>
-              <th className="px-6 py-3">Ledger Result</th>
-              <th className="px-6 py-3 text-right">Timestamp</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {recentSubmissions.map((sub) => (
-              <tr key={sub.id} className="hover:bg-slate-50/60 transition-colors">
-                <td className="px-6 py-3.5 font-mono font-semibold text-slate-800">
-                  {sub.id}
-                </td>
-                <td className="px-6 py-3.5 font-medium text-slate-900">
-                  {sub.form}
-                </td>
-                <td className="px-6 py-3.5 text-slate-600">
-                  {sub.applicant}
-                </td>
-                <td className="px-6 py-3.5">
-                  <Badge dot>{sub.status}</Badge>
-                </td>
-                <td className="px-6 py-3.5 font-mono text-slate-600">
-                  {sub.ocrConfidence}
-                </td>
-                <td className="px-6 py-3.5 text-slate-600">
-                  {sub.ledgerMatch}
-                </td>
-                <td className="px-6 py-3.5 text-right text-slate-400 font-mono">
-                  {sub.date}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        </CardHeader>
+
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader className="bg-muted/30">
+              <TableRow className="border-border/70">
+                <TableHead className="text-xs font-semibold">Tracking ID</TableHead>
+                <TableHead className="text-xs font-semibold">Form Name</TableHead>
+                <TableHead className="text-xs font-semibold">Applicant / Record</TableHead>
+                <TableHead className="text-xs font-semibold">Status</TableHead>
+                <TableHead className="text-xs font-semibold">OCR Confidence</TableHead>
+                <TableHead className="text-xs font-semibold">Ledger Result</TableHead>
+                <TableHead className="text-xs font-semibold text-right">Timestamp</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {recentSubmissions.map((sub) => (
+                <TableRow key={sub.id} className="hover:bg-muted/40 transition-colors duration-150 border-border/60">
+                  <TableCell className="font-mono font-semibold text-xs text-foreground">
+                    {sub.id}
+                  </TableCell>
+                  <TableCell className="font-medium text-xs text-foreground">
+                    {sub.form}
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    {sub.applicant}
+                  </TableCell>
+                  <TableCell>
+                    <Badge dot className="text-[10px]">
+                      {sub.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground">
+                    {sub.ocrConfidence}
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
+                    {sub.ledgerMatch}
+                  </TableCell>
+                  <TableCell className="text-right text-xs text-muted-foreground font-mono">
+                    {sub.date}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
       </Card>
     </div>
   );

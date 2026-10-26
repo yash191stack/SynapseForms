@@ -22,17 +22,27 @@ import {
   Calendar,
   ListFilter,
   UploadCloud,
+  Sparkles,
 } from 'lucide-react';
-import Button from '../../components/common/Button';
-import Input from '../../components/common/Input';
-import Card from '../../components/common/Card';
-import Badge from '../../components/common/Badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
 
 export default function FormBuilderPage() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('BUILDER'); // 'BUILDER' | 'PREVIEW'
+  const [activeTab, setActiveTab] = useState('BUILDER');
   const [isSaving, setIsSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Form Metadata
   const [formTitle, setFormTitle] = useState('Student Fee Exemption & Grant');
@@ -126,10 +136,13 @@ export default function FormBuilderPage() {
         helpText: 'Dynamic field added to schema.',
       },
     ]);
+
+    toast.success(`Added ${def.label} to form schema`);
   };
 
   const removeField = (id) => {
     setFields(fields.filter((f) => f.id !== id));
+    toast.info('Field removed from schema');
   };
 
   const moveField = (index, direction) => {
@@ -150,11 +163,11 @@ export default function FormBuilderPage() {
 
   const handleSaveSchema = () => {
     setIsSaving(true);
+    toast.loading('Saving schema configuration...', { id: 'save-schema' });
     setTimeout(() => {
       setIsSaving(false);
-      setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 3000);
-    }, 600);
+      toast.success('Form schema saved successfully!', { id: 'save-schema' });
+    }, 500);
   };
 
   return (
@@ -163,87 +176,84 @@ export default function FormBuilderPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <Link to="/admin/forms">
-            <Button variant="ghost" size="sm" icon={<ArrowLeft className="w-4 h-4" />}>
-              Back to Forms
+            <Button variant="ghost" size="sm" className="text-xs h-8">
+              <ArrowLeft className="w-3.5 h-3.5 mr-1" />
+              <span>Back</span>
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              Interactive Form Builder
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500">
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                Interactive Form Builder
+              </h1>
+              <Badge variant="purple" className="text-[10px]">
+                Draft v1
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5">
               Configure dynamic fields, attach master ledger validation rules, and activate OCR pipelines.
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Mode Switcher */}
-          <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
-            <button
-              type="button"
-              onClick={() => setActiveTab('BUILDER')}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-                activeTab === 'BUILDER'
-                  ? 'bg-white text-indigo-700 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Settings2 className="w-3.5 h-3.5" />
-              <span>Schema Editor</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('PREVIEW')}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-                activeTab === 'PREVIEW'
-                  ? 'bg-white text-indigo-700 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Eye className="w-3.5 h-3.5" />
-              <span>Live Form Preview</span>
-            </button>
-          </div>
+          {/* shadcn Tabs for Mode Switcher */}
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="h-8 p-1">
+              <TabsTrigger value="BUILDER" className="text-xs px-2.5">
+                <Settings2 className="w-3 h-3 mr-1" />
+                <span>Schema</span>
+              </TabsTrigger>
+              <TabsTrigger value="PREVIEW" className="text-xs px-2.5">
+                <Eye className="w-3 h-3 mr-1" />
+                <span>Live Preview</span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
 
           <Button
-            variant="primary"
-            loading={isSaving}
+            size="sm"
+            disabled={isSaving}
             onClick={handleSaveSchema}
-            icon={saveSuccess ? <CheckCircle2 className="w-4 h-4 text-emerald-300" /> : <Save className="w-4 h-4" />}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs h-8 shadow-xs"
           >
-            {saveSuccess ? 'Saved to State!' : 'Save Schema'}
+            <Save className="w-3.5 h-3.5 mr-1" />
+            <span>Save Schema</span>
           </Button>
         </div>
       </div>
 
-      {saveSuccess && (
-        <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 flex items-center justify-between text-xs text-emerald-800">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span className="font-semibold">Dynamic schema draft saved successfully. Ready for master ledger validation.</span>
-          </div>
-          <Badge variant="success">Saved</Badge>
-        </div>
-      )}
-
       {activeTab === 'BUILDER' ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Left 2 Cols: Form Metadata & Configured Fields */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-5">
             {/* Form General Settings */}
-            <Card title="Form Overview & Identity" subtitle="Core metadata displayed to applicants">
-              <div className="space-y-4">
-                <Input
-                  label="Form Title"
-                  value={formTitle}
-                  onChange={(e) => setFormTitle(e.target.value)}
-                  placeholder="e.g. Merit Scholarship Application 2026"
-                  required
-                />
+            <Card className="border-border/70 p-5">
+              <CardHeader className="p-0 pb-3">
+                <CardTitle className="text-sm font-bold text-foreground">
+                  Form Overview & Identity
+                </CardTitle>
+                <CardDescription className="text-xs text-muted-foreground">
+                  Core metadata displayed to applicants in the public view
+                </CardDescription>
+              </CardHeader>
 
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+              <CardContent className="p-0 space-y-3.5">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-semibold text-foreground uppercase tracking-wider block">
+                    Form Title
+                  </label>
+                  <Input
+                    value={formTitle}
+                    onChange={(e) => setFormTitle(e.target.value)}
+                    placeholder="e.g. Merit Scholarship Application 2026"
+                    className="h-8.5 text-xs"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-semibold text-foreground uppercase tracking-wider block">
                     Form Description & Instructions
                   </label>
                   <textarea
@@ -251,350 +261,408 @@ export default function FormBuilderPage() {
                     value={formDescription}
                     onChange={(e) => setFormDescription(e.target.value)}
                     placeholder="Provide detailed instructions to users..."
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                    className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
                   />
                 </div>
-              </div>
+              </CardContent>
             </Card>
 
             {/* Dynamic Fields List */}
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900">
+                  <h3 className="text-sm font-bold text-foreground">
                     Configured Dynamic Fields ({fields.length})
                   </h3>
-                  <p className="text-xs text-slate-500">
-                    Drag or order fields and assign validation rules for the verification pipeline.
+                  <p className="text-xs text-muted-foreground">
+                    Order fields and assign validation rules for the verification pipeline.
                   </p>
                 </div>
-                <Badge variant="purple">{fields.length} Active</Badge>
+                <Badge variant="secondary" className="text-[10px]">
+                  {fields.length} Active
+                </Badge>
               </div>
 
               {fields.map((field, idx) => (
-                <div
+                <Card
                   key={field.id}
-                  className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs transition-all hover:border-slate-300 space-y-4"
+                  className="border-border/70 hover:border-border transition-all duration-150 p-4 space-y-3"
                 >
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
                     <div className="flex items-center gap-2">
-                      <span className="h-6 w-6 rounded-full bg-slate-100 text-slate-600 font-mono text-xs flex items-center justify-center font-bold">
+                      <span className="h-5 w-5 rounded-md bg-muted text-foreground font-mono text-[10px] flex items-center justify-center font-bold">
                         {idx + 1}
                       </span>
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                        Type: {field.type.toUpperCase()}
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                        {field.type}
                       </span>
                       {field.required && (
-                        <Badge variant="danger" size="sm">
+                        <Badge variant="destructive" className="text-[9px] px-1 h-4">
                           Required
                         </Badge>
                       )}
                       {field.validationRule !== 'NONE' && (
-                        <Badge variant="purple" size="sm">
-                          Rule: {field.validationRule}
+                        <Badge variant="purple" className="text-[9px] px-1 h-4">
+                          {field.validationRule}
                         </Badge>
                       )}
                     </div>
 
                     <div className="flex items-center gap-1">
-                      <button
-                        type="button"
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
                         onClick={() => moveField(idx, -1)}
                         disabled={idx === 0}
-                        className="p-1 rounded text-slate-400 hover:text-slate-700 disabled:opacity-30 cursor-pointer"
+                        className="text-muted-foreground hover:text-foreground"
                         title="Move Up"
                       >
-                        <MoveUp className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
+                        <MoveUp className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
                         onClick={() => moveField(idx, 1)}
                         disabled={idx === fields.length - 1}
-                        className="p-1 rounded text-slate-400 hover:text-slate-700 disabled:opacity-30 cursor-pointer"
+                        className="text-muted-foreground hover:text-foreground"
                         title="Move Down"
                       >
-                        <MoveDown className="w-4 h-4" />
-                      </button>
-                      <button
-                        type="button"
+                        <MoveDown className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
                         onClick={() => removeField(field.id)}
-                        className="p-1 rounded text-rose-500 hover:bg-rose-50 cursor-pointer ml-1"
+                        className="text-destructive hover:bg-destructive/10"
                         title="Delete Field"
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Input
-                      label="Field Label"
-                      value={field.label}
-                      onChange={(e) => updateField(field.id, 'label', e.target.value)}
-                    />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block">
+                        Field Label
+                      </label>
+                      <Input
+                        value={field.label}
+                        onChange={(e) => updateField(field.id, 'label', e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
 
-                    <Input
-                      label="Placeholder Text"
-                      value={field.placeholder || ''}
-                      onChange={(e) => updateField(field.id, 'placeholder', e.target.value)}
-                    />
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block">
+                        Placeholder Text
+                      </label>
+                      <Input
+                        value={field.placeholder || ''}
+                        onChange={(e) => updateField(field.id, 'placeholder', e.target.value)}
+                        className="h-8 text-xs"
+                      />
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                        Attached Verification Rule
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-border/50">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block">
+                        Validation Constraint
                       </label>
                       <select
                         value={field.validationRule}
                         onChange={(e) => updateField(field.id, 'validationRule', e.target.value)}
-                        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                        className="w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-xs text-foreground focus:border-ring focus:outline-none"
                       >
-                        <option value="NONE">Standard Input (No external check)</option>
-                        <option value="LEDGER_LOOKUP">Master Ledger Match (Must exist in dataset)</option>
-                        <option value="EXACT_MATCH">Exact Ledger Record Value Match</option>
-                        <option value="OCR_EXTRACT">OCR Extraction & Cross-Check</option>
-                        <option value="REGEX_EMAIL">Institutional Email Regex</option>
-                        <option value="NUMERIC">Numeric Range Validation</option>
+                        <option value="NONE" className="bg-background">Standard Input</option>
+                        <option value="LEDGER_LOOKUP" className="bg-background">Master Ledger Match</option>
+                        <option value="EXACT_MATCH" className="bg-background">Exact Record Value Match</option>
+                        <option value="OCR_EXTRACT" className="bg-background">OCR Extraction & Cross-Check</option>
+                        <option value="REGEX_EMAIL" className="bg-background">Institutional Email Regex</option>
+                        <option value="NUMERIC" className="bg-background">Numeric Range Check</option>
                       </select>
                     </div>
 
-                    <div className="flex items-center gap-4 pt-5">
-                      <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700 select-none">
+                    <div className="flex items-center gap-2 pt-4">
+                      <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-foreground select-none">
                         <input
                           type="checkbox"
                           checked={field.required}
                           onChange={(e) => updateField(field.id, 'required', e.target.checked)}
-                          className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                          className="rounded border-border text-indigo-600 focus:ring-ring"
                         />
-                        <span>Field is Mandatory</span>
+                        <span className="text-[11px]">Field is Mandatory</span>
                       </label>
                     </div>
                   </div>
-                </div>
+                </Card>
               ))}
             </div>
           </div>
 
           {/* Right Column: Palette & Validation Settings */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             {/* Field Palette */}
-            <Card title="Add Field to Schema" subtitle="Click any type to append to your dynamic form">
-              <div className="grid grid-cols-2 gap-2.5">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addField('text')}
-                  icon={<Type className="w-3.5 h-3.5 text-indigo-600" />}
-                  className="justify-start"
-                >
-                  Text Field
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addField('number')}
-                  icon={<Hash className="w-3.5 h-3.5 text-indigo-600" />}
-                  className="justify-start"
-                >
-                  Number
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addField('email')}
-                  icon={<AtSign className="w-3.5 h-3.5 text-indigo-600" />}
-                  className="justify-start"
-                >
-                  Email
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addField('date')}
-                  icon={<Calendar className="w-3.5 h-3.5 text-indigo-600" />}
-                  className="justify-start"
-                >
-                  Date Picker
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addField('select')}
-                  icon={<ListFilter className="w-3.5 h-3.5 text-indigo-600" />}
-                  className="justify-start"
-                >
-                  Dropdown
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addField('file')}
-                  icon={<UploadCloud className="w-3.5 h-3.5 text-indigo-600" />}
-                  className="justify-start"
-                >
-                  OCR Upload
-                </Button>
-              </div>
+            <Card className="border-border/70 p-5">
+              <CardHeader className="p-0 pb-3">
+                <CardTitle className="text-sm font-bold text-foreground">
+                  Add Field to Schema
+                </CardTitle>
+                <CardDescription className="text-xs text-muted-foreground">
+                  Click any field type to append to your dynamic form
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="p-0">
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addField('text')}
+                    className="justify-start text-xs h-8"
+                  >
+                    <Type className="w-3.5 h-3.5 mr-1.5 text-indigo-600" />
+                    <span>Text Field</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addField('number')}
+                    className="justify-start text-xs h-8"
+                  >
+                    <Hash className="w-3.5 h-3.5 mr-1.5 text-indigo-600" />
+                    <span>Number</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addField('email')}
+                    className="justify-start text-xs h-8"
+                  >
+                    <AtSign className="w-3.5 h-3.5 mr-1.5 text-indigo-600" />
+                    <span>Email</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addField('date')}
+                    className="justify-start text-xs h-8"
+                  >
+                    <Calendar className="w-3.5 h-3.5 mr-1.5 text-indigo-600" />
+                    <span>Date Picker</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addField('select')}
+                    className="justify-start text-xs h-8"
+                  >
+                    <ListFilter className="w-3.5 h-3.5 mr-1.5 text-indigo-600" />
+                    <span>Dropdown</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addField('file')}
+                    className="justify-start text-xs h-8"
+                  >
+                    <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-indigo-600" />
+                    <span>OCR Upload</span>
+                  </Button>
+                </div>
+              </CardContent>
             </Card>
 
             {/* Master Ledger Linkage */}
-            <Card
-              title="Master Ledger Cross-Check"
-              subtitle="Link this form schema to reference datasets"
-            >
-              <div className="space-y-4 text-xs">
+            <Card className="border-border/70 p-5">
+              <CardHeader className="p-0 pb-3">
+                <CardTitle className="text-sm font-bold text-foreground">
+                  Master Ledger Cross-Check
+                </CardTitle>
+                <CardDescription className="text-xs text-muted-foreground">
+                  Connect schema to authoritative reference dataset
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="p-0 space-y-3 text-xs">
                 <div>
-                  <label className="font-semibold text-slate-700 uppercase tracking-wider block mb-1">
+                  <label className="font-semibold text-foreground uppercase tracking-wider block text-[10px] mb-1">
                     Select Reference Dataset
                   </label>
                   <select
                     value={selectedLedger}
                     onChange={(e) => setSelectedLedger(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 bg-white p-2 text-xs font-medium text-slate-800"
+                    className="w-full rounded-md border border-input bg-transparent p-2 text-xs font-medium text-foreground"
                   >
-                    <option value="Student_Merit_Registry_2026.csv">
+                    <option value="Student_Merit_Registry_2026.csv" className="bg-background">
                       Student_Merit_Registry_2026.csv (4,500 records)
                     </option>
-                    <option value="Approved_Vendors_Master.xlsx">
+                    <option value="Approved_Vendors_Master.xlsx" className="bg-background">
                       Approved_Vendors_Master.xlsx (820 records)
                     </option>
-                    <option value="Hostel_Eligibility_List.csv">
+                    <option value="Hostel_Eligibility_List.csv" className="bg-background">
                       Hostel_Eligibility_List.csv (1,200 records)
                     </option>
-                    <option value="NONE">None (Stand-alone form)</option>
+                    <option value="NONE" className="bg-background">None (Stand-alone form)</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 uppercase tracking-wider block mb-1">
+                  <label className="font-semibold text-foreground uppercase tracking-wider block text-[10px] mb-1">
                     Primary Match Key Column
                   </label>
                   <Input
                     value={ledgerMatchKey}
                     onChange={(e) => setLedgerMatchKey(e.target.value)}
                     placeholder="e.g. roll_number or vendor_tax_id"
+                    className="h-8 text-xs"
                   />
-                  <p className="mt-1 text-[11px] text-slate-500">
-                    Submissions will query this column in the master dataset.
+                  <p className="mt-1 text-[11px] text-muted-foreground">
+                    Submissions query this key in the master dataset.
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-indigo-600 font-medium">
-                  <Link to="/admin/ledger" className="hover:underline flex items-center gap-1">
-                    <Database className="w-3.5 h-3.5" />
-                    <span>Manage Ledgers (Gauri's module)</span>
-                  </Link>
-                </div>
-              </div>
+                <Separator />
+
+                <Link
+                  to="/admin/ledger"
+                  className="text-xs text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1.5 pt-0.5"
+                >
+                  <Database className="w-3.5 h-3.5" />
+                  <span>Manage Datasets (Gauri's module)</span>
+                </Link>
+              </CardContent>
             </Card>
 
             {/* OCR Engine Integration */}
-            <Card
-              title="OCR Document Engine"
-              subtitle="Tesseract.js automated text extraction"
-            >
-              <div className="space-y-3 text-xs">
-                <label className="flex items-center gap-2 cursor-pointer font-medium text-slate-800 select-none">
+            <Card className="border-border/70 p-5">
+              <CardHeader className="p-0 pb-2">
+                <CardTitle className="text-sm font-bold text-foreground">
+                  OCR Document Engine
+                </CardTitle>
+                <CardDescription className="text-xs text-muted-foreground">
+                  Tesseract.js automated text extraction
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="p-0 space-y-2 text-xs">
+                <label className="flex items-center gap-2 cursor-pointer font-medium text-foreground select-none">
                   <input
                     type="checkbox"
                     checked={ocrEnabled}
                     onChange={(e) => setOcrEnabled(e.target.checked)}
-                    className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                    className="rounded border-border text-indigo-600 focus:ring-ring"
                   />
-                  <span>Enable Document OCR Text Extraction</span>
+                  <span className="text-[11px]">Enable Document OCR Extraction</span>
                 </label>
-                <p className="text-[11px] text-slate-500 leading-relaxed">
-                  Extracts raw text, dates, currency amounts, and stamps from PDF and image vouchers for automatic verification.
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  Extracts raw text, dates, currency amounts, and stamps from vouchers for automatic verification.
                 </p>
-                <Badge variant="purple" size="sm">
+                <Badge variant="purple" className="text-[10px]">
                   Powered by Tesseract.js Backend
                 </Badge>
-              </div>
+              </CardContent>
             </Card>
           </div>
         </div>
       ) : (
         /* Live Form Preview Tab */
         <div className="max-w-2xl mx-auto">
-          <Card
-            className="shadow-md border-slate-200"
-            headerClassName="bg-slate-50/70"
-            title={
-              <div className="flex items-center justify-between w-full">
+          <Card className="border-border/80 shadow-md">
+            <CardHeader className="p-6 border-b border-border/70">
+              <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">{formTitle}</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">{formDescription}</p>
+                  <CardTitle className="text-base font-bold text-foreground">
+                    {formTitle}
+                  </CardTitle>
+                  <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                    {formDescription}
+                  </CardDescription>
                 </div>
-                <Badge variant="success" dot>
-                  Preview Mode
+                <Badge variant="success" dot className="text-[10px]">
+                  Preview
                 </Badge>
               </div>
-            }
-          >
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
-              {fields.map((field) => (
-                <div key={field.id} className="space-y-1.5">
-                  {field.type === 'select' ? (
-                    <div>
-                      <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-1 mb-1">
-                        {field.label}
-                        {field.required && <span className="text-rose-500 font-bold">*</span>}
-                      </label>
-                      <select className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900">
-                        {field.options &&
-                          field.options.map((opt, i) => (
-                            <option key={i} value={opt}>
-                              {opt}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
-                  ) : field.type === 'file' ? (
-                    <div>
-                      <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-1 mb-1">
-                        {field.label}
-                        {field.required && <span className="text-rose-500 font-bold">*</span>}
-                      </label>
-                      <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:bg-slate-50 transition-colors">
-                        <UploadCloud className="w-8 h-8 text-indigo-500 mx-auto mb-2" />
-                        <p className="text-xs font-semibold text-slate-800">
-                          Click to upload receipt document or drag and drop
-                        </p>
-                        <p className="text-[11px] text-slate-400 mt-1">
-                          PNG, JPG, or PDF up to 10MB • Auto OCR Enabled
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <Input
-                      label={field.label}
-                      type={field.type}
-                      placeholder={field.placeholder}
-                      required={field.required}
-                      helperText={field.helpText}
-                    />
-                  )}
-                </div>
-              ))}
+            </CardHeader>
 
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setActiveTab('BUILDER')}
-                >
-                  Return to Schema Editor
-                </Button>
-                <Button
-                  variant="primary"
-                  size="md"
-                  icon={<ShieldCheck className="w-4 h-4" />}
-                >
-                  Simulate Submit & Verify
-                </Button>
-              </div>
-            </form>
+            <CardContent className="p-6 space-y-4">
+              <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+                {fields.map((field) => (
+                  <div key={field.id} className="space-y-1.5">
+                    {field.type === 'select' ? (
+                      <div>
+                        <label className="text-[11px] font-semibold text-foreground uppercase tracking-wider flex items-center gap-1 mb-1">
+                          {field.label}
+                          {field.required && <span className="text-destructive">*</span>}
+                        </label>
+                        <select className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-xs text-foreground">
+                          {field.options &&
+                            field.options.map((opt, i) => (
+                              <option key={i} value={opt} className="bg-background">
+                                {opt}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                    ) : field.type === 'file' ? (
+                      <div>
+                        <label className="text-[11px] font-semibold text-foreground uppercase tracking-wider flex items-center gap-1 mb-1">
+                          {field.label}
+                          {field.required && <span className="text-destructive">*</span>}
+                        </label>
+                        <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:bg-muted/30 transition-colors">
+                          <UploadCloud className="w-8 h-8 text-indigo-500 mx-auto mb-2" />
+                          <p className="text-xs font-semibold text-foreground">
+                            Click to upload receipt document or drag and drop
+                          </p>
+                          <p className="text-[11px] text-muted-foreground mt-1">
+                            PNG, JPG, or PDF up to 10MB • Auto OCR Enabled
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-semibold text-foreground uppercase tracking-wider flex items-center gap-1">
+                          {field.label}
+                          {field.required && <span className="text-destructive">*</span>}
+                        </label>
+                        <Input
+                          type={field.type}
+                          placeholder={field.placeholder}
+                          required={field.required}
+                          className="h-9 text-xs"
+                        />
+                        {field.helpText && (
+                          <p className="text-[10px] text-muted-foreground">{field.helpText}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                <Separator className="my-4" />
+
+                <div className="flex items-center justify-between">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setActiveTab('BUILDER')}
+                    className="text-xs h-8"
+                  >
+                    Return to Schema Editor
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs h-8 shadow-xs"
+                    onClick={() => toast.success('Mock submission verified successfully!')}
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5 mr-1" />
+                    <span>Simulate Submit & Verify</span>
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
           </Card>
         </div>
       )}

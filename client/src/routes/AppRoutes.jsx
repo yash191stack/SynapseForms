@@ -14,18 +14,18 @@ import FormBuilderPage from '../pages/admin/FormBuilderPage';
 import PlaceholderPage from '../pages/admin/PlaceholderPage';
 
 // 404 NotFound
-import Button from '../components/common/Button';
+import { Button } from '@/components/ui/button';
 
 function NotFoundPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-slate-50">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-background text-foreground">
       <div className="text-6xl font-black text-indigo-600 font-mono mb-2">404</div>
-      <h1 className="text-2xl font-bold text-slate-900 mb-2">Page Not Found</h1>
-      <p className="text-sm text-slate-500 max-w-sm mb-6">
+      <h1 className="text-2xl font-bold tracking-tight mb-2">Page Not Found</h1>
+      <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mb-6">
         The route you requested does not exist in the SynapseForms application.
       </p>
       <Link to="/">
-        <Button variant="primary">Return to Homepage</Button>
+        <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">Return to Homepage</Button>
       </Link>
     </div>
   );

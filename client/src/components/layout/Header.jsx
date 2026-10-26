@@ -6,12 +6,30 @@ import {
   Bell,
   Search,
   ExternalLink,
-  ShieldCheck,
   ChevronRight,
+  ShieldCheck,
   Sparkles,
+  Command,
+  User,
+  Settings,
+  LogOut,
 } from 'lucide-react';
-import Button from '../common/Button';
-import Badge from '../common/Badge';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export default function Header({
   variant = 'admin',
@@ -22,46 +40,59 @@ export default function Header({
 
   if (variant === 'public') {
     return (
-      <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/85 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background/80 backdrop-blur-md transition-colors">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-15 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-              <Layers className="h-5 w-5" />
+            <div className="h-8.5 w-8.5 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/20 group-hover:scale-105 active:scale-95 transition-transform duration-200">
+              <Layers className="h-4.5 w-4.5" />
             </div>
-            <div>
-              <span className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
+            <div className="flex items-center gap-2">
+              <span className="text-base font-bold tracking-tight text-foreground">
                 Synapse<span className="text-indigo-600">Forms</span>
               </span>
-              <span className="hidden sm:inline-block ml-2 text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-100">
-                v1.0-alpha
-              </span>
+              <Badge variant="purple" className="text-[10px] px-1.5 py-0 font-semibold tracking-wider uppercase">
+                v1.0
+              </Badge>
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
-            <a href="#features" className="hover:text-indigo-600 transition-colors">
-              Platform Features
+          <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-muted-foreground">
+            <a
+              href="#features"
+              className="hover:text-foreground transition-colors duration-150 py-1"
+            >
+              Capabilities
             </a>
-            <a href="#architecture" className="hover:text-indigo-600 transition-colors">
+            <a
+              href="#architecture"
+              className="hover:text-foreground transition-colors duration-150 py-1"
+            >
               Architecture
             </a>
-            <a href="#verification" className="hover:text-indigo-600 transition-colors">
-              Verification Engine
+            <a
+              href="#verification"
+              className="hover:text-foreground transition-colors duration-150 py-1"
+            >
+              Verification Pipeline
             </a>
-            <Link to="/admin/forms" className="hover:text-indigo-600 transition-colors">
-              Explore Forms
+            <Link
+              to="/admin/forms"
+              className="hover:text-foreground transition-colors duration-150 py-1"
+            >
+              Forms Catalog
             </Link>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <Link to="/admin/login">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="text-xs h-8">
                 Admin Sign In
               </Button>
             </Link>
             <Link to="/admin/dashboard">
-              <Button variant="primary" size="sm" icon={<ExternalLink className="w-3.5 h-3.5" />} iconPosition="right">
-                Admin Console
+              <Button size="sm" className="text-xs h-8 bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs">
+                <span>Console</span>
+                <ExternalLink className="w-3 h-3 ml-1" />
               </Button>
             </Link>
           </div>
@@ -75,76 +106,131 @@ export default function Header({
   const currentSection = pathParts[1] || 'dashboard';
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white/90 px-4 sm:px-6 backdrop-blur-md">
+    <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-border/70 bg-background/80 px-4 sm:px-6 backdrop-blur-md transition-colors">
       <div className="flex items-center gap-3">
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="icon-sm"
           onClick={onMenuToggle}
-          className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden focus:outline-none"
+          className="lg:hidden text-muted-foreground"
           aria-label="Toggle menu"
         >
-          <Menu className="h-5 w-5" />
-        </button>
+          <Menu className="h-4 w-4" />
+        </Button>
 
-        <div className="flex items-center gap-2 text-sm text-slate-500">
+        {/* Breadcrumb Hierarchy */}
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Link
             to="/admin/dashboard"
-            className="hover:text-indigo-600 font-medium transition-colors"
+            className="hover:text-foreground font-medium transition-colors"
           >
             Admin
           </Link>
-          <ChevronRight className="h-3.5 w-3.5 text-slate-400" />
-          <span className="font-semibold text-slate-900 capitalize">
+          <ChevronRight className="h-3 w-3 text-muted-foreground/60" />
+          <span className="font-semibold text-foreground capitalize tracking-tight">
             {title || currentSection.replace('-', ' ')}
           </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 sm:gap-4">
-        {/* Status Indicator */}
+      <div className="flex items-center gap-3">
+        {/* Telemetry pill */}
         <div className="hidden sm:flex items-center gap-2">
-          <Badge variant="purple" size="sm" dot>
-            Standalone Frontend
+          <Badge variant="purple" dot className="font-mono text-[10px]">
+            Frontend Foundation
           </Badge>
-          <Badge variant="success" size="sm">
-            Mock Mode
+          <Badge variant="success" dot className="font-mono text-[10px]">
+            Active
           </Badge>
         </div>
 
-        {/* Action icons */}
-        <Link
-          to="/"
-          target="_blank"
-          title="Open Public Portal"
-          className="hidden md:flex items-center gap-1.5 text-xs text-slate-500 hover:text-indigo-600 font-medium py-1 px-2.5 rounded-md hover:bg-slate-100 transition-colors"
-        >
-          <ExternalLink className="w-3.5 h-3.5" />
-          <span>View Site</span>
-        </Link>
+        {/* Quick Public View */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              to="/"
+              target="_blank"
+              className="hidden md:inline-flex items-center"
+            >
+              <Button variant="ghost" size="sm" className="text-xs h-7.5 px-2 text-muted-foreground hover:text-foreground">
+                <ExternalLink className="w-3.5 h-3.5 mr-1 text-muted-foreground" />
+                <span>Site Preview</span>
+              </Button>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="text-xs">
+            Open live public landing view in new tab
+          </TooltipContent>
+        </Tooltip>
 
-        <button
-          type="button"
-          className="relative rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
-          aria-label="Notifications"
-        >
-          <Bell className="h-4 w-4" />
-          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-indigo-600 ring-2 ring-white" />
-        </button>
+        {/* Notifications */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="relative text-muted-foreground hover:text-foreground"
+              aria-label="Notifications"
+            >
+              <Bell className="h-3.5 w-3.5" />
+              <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-indigo-600 ring-2 ring-background" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="text-xs">
+            System Alerts & OCR Queue
+          </TooltipContent>
+        </Tooltip>
 
-        {/* User profile capsule */}
-        <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-600 to-indigo-400 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-            SS
-          </div>
-          <div className="hidden lg:block text-left">
-            <p className="text-xs font-semibold text-slate-800 leading-none">
-              Shresht Soni
-            </p>
-            <p className="text-[11px] text-slate-400 leading-tight mt-0.5">
-              Frontend Lead
-            </p>
-          </div>
-        </div>
+        {/* User profile with DropdownMenu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-8 gap-2 pl-1 pr-2 hover:bg-muted/60">
+              <Avatar className="h-6 w-6 ring-1 ring-border">
+                <AvatarFallback className="bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white text-[10px] font-bold">
+                  SS
+                </AvatarFallback>
+              </Avatar>
+              <div className="hidden md:flex flex-col text-left">
+                <span className="text-xs font-semibold text-foreground leading-none">
+                  Shresht Soni
+                </span>
+                <span className="text-[10px] text-muted-foreground leading-tight mt-0.5">
+                  Frontend
+                </span>
+              </div>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52 text-xs">
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-xs font-semibold text-foreground">Shresht Soni</p>
+                <p className="text-[11px] text-muted-foreground truncate">
+                  shresht@synapseforms.org
+                </p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link to="/admin/dashboard" className="cursor-pointer">
+                <Layers className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                <span>Admin Console</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/admin/forms/create" className="cursor-pointer">
+                <Settings className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
+                <span>Form Builder</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild className="text-rose-600 focus:text-rose-600 focus:bg-rose-50 cursor-pointer">
+              <Link to="/admin/login">
+                <LogOut className="mr-2 h-3.5 w-3.5" />
+                <span>Sign Out</span>
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );

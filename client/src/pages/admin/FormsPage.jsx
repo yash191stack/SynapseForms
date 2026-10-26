@@ -14,11 +14,22 @@ import {
   Copy,
   Trash2,
   Edit3,
+  ScanText,
 } from 'lucide-react';
-import Button from '../../components/common/Button';
-import Input from '../../components/common/Input';
-import Card from '../../components/common/Card';
-import Badge from '../../components/common/Badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
 
 export default function FormsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -99,140 +110,154 @@ export default function FormsPage() {
     return matchesSearch;
   });
 
+  const handleCopyLink = (formId) => {
+    toast.success(`Copied public link for ${formId}`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
             Forms Directory
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-0.5">
             Manage your dynamic schemas, attach master datasets, and configure verification pipelines.
           </p>
         </div>
 
         <Link to="/admin/forms/create">
-          <Button
-            variant="primary"
-            icon={<PlusCircle className="w-4 h-4" />}
-          >
-            Create New Form
+          <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs h-8 shadow-xs">
+            <PlusCircle className="w-3.5 h-3.5 mr-1" />
+            <span>Create New Form</span>
           </Button>
         </Link>
       </div>
 
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row items-center gap-3">
-        <div className="w-full sm:flex-1">
+        <div className="w-full sm:flex-1 relative">
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground pointer-events-none" />
           <Input
             placeholder="Search forms by title, ledger dataset, or description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            icon={<Search className="w-4 h-4" />}
+            className="pl-9 h-9 text-xs"
           />
         </div>
 
-        <div className="flex items-center gap-1.5 self-start sm:self-auto bg-slate-100 p-1 rounded-lg border border-slate-200">
-          {['ALL', 'ACTIVE', 'DRAFT'].map((filter) => (
-            <button
-              key={filter}
-              type="button"
-              onClick={() => setSelectedFilter(filter)}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
-                selectedFilter === filter
-                  ? 'bg-white text-indigo-700 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              {filter}
-            </button>
-          ))}
-        </div>
+        {/* shadcn Tabs for status filter */}
+        <Tabs value={selectedFilter} onValueChange={setSelectedFilter} className="self-start sm:self-auto">
+          <TabsList className="h-9 p-1">
+            <TabsTrigger value="ALL" className="text-xs px-3">
+              All Forms
+            </TabsTrigger>
+            <TabsTrigger value="ACTIVE" className="text-xs px-3">
+              Active ({initialForms.filter((f) => f.status === 'Active').length})
+            </TabsTrigger>
+            <TabsTrigger value="DRAFT" className="text-xs px-3">
+              Drafts ({initialForms.filter((f) => f.status === 'Draft').length})
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
       {/* Forms Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {filteredForms.map((form) => (
           <Card
             key={form.id}
-            hover
-            className="flex flex-col justify-between"
-            headerClassName="pb-3"
-            title={
-              <div className="flex items-center justify-between w-full">
-                <span className="font-semibold text-slate-900 text-sm line-clamp-1">
-                  {form.title}
-                </span>
-              </div>
-            }
-            action={
-              <Badge
-                variant={form.status === 'Active' ? 'success' : 'neutral'}
-                dot={form.status === 'Active'}
-              >
-                {form.status}
-              </Badge>
-            }
-            footer={
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400">Updated {form.lastUpdated}</span>
-                <div className="flex items-center gap-2">
-                  <Link to={`/admin/forms/create?edit=${form.id}`}>
-                    <Button variant="ghost" size="sm" icon={<Edit3 className="w-3 h-3" />}>
-                      Edit
-                    </Button>
-                  </Link>
-                  <Link to="/admin/submissions">
-                    <Button variant="outline" size="sm">
-                      Submissions
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            }
+            className="flex flex-col justify-between border-border/70 hover:shadow-md hover:border-border transition-all duration-200"
           >
-            <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-4">
-              {form.description}
-            </p>
+            <div>
+              <CardHeader className="p-5 pb-2">
+                <div className="flex items-center justify-between mb-1">
+                  <Badge
+                    variant={form.status === 'Active' ? 'success' : 'secondary'}
+                    dot={form.status === 'Active'}
+                    className="text-[10px]"
+                  >
+                    {form.status}
+                  </Badge>
+                  <span className="text-[10px] text-muted-foreground font-mono">
+                    {form.lastUpdated}
+                  </span>
+                </div>
+                <CardTitle className="text-sm font-bold text-foreground leading-snug line-clamp-1">
+                  {form.title}
+                </CardTitle>
+                <CardDescription className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mt-1">
+                  {form.description}
+                </CardDescription>
+              </CardHeader>
 
-            <div className="space-y-2 pt-2 border-t border-slate-100 text-xs">
-              <div className="flex items-center justify-between text-slate-600">
-                <span className="text-slate-400">Configured Fields</span>
-                <span className="font-semibold text-slate-800">{form.fieldsCount} dynamic fields</span>
-              </div>
-              <div className="flex items-center justify-between text-slate-600">
-                <span className="text-slate-400">Submissions</span>
-                <span className="font-semibold text-slate-800 font-mono">{form.submissionsCount}</span>
-              </div>
-              <div className="flex items-center justify-between text-slate-600">
-                <span className="text-slate-400">Ledger Reference</span>
-                <span className="font-medium text-indigo-600 truncate max-w-[180px]" title={form.ledger}>
-                  {form.ledger}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-slate-600">
-                <span className="text-slate-400">OCR Processing</span>
-                <span className="font-medium text-slate-700">
-                  {form.ocrRequired ? 'Enabled (Tesseract)' : 'Disabled'}
-                </span>
-              </div>
+              <CardContent className="p-5 pt-2">
+                <div className="space-y-2 pt-2 border-t border-border/60 text-xs">
+                  <div className="flex items-center justify-between text-muted-foreground">
+                    <span className="text-[11px]">Fields</span>
+                    <span className="font-semibold text-foreground">{form.fieldsCount} dynamic fields</span>
+                  </div>
+                  <div className="flex items-center justify-between text-muted-foreground">
+                    <span className="text-[11px]">Submissions</span>
+                    <span className="font-semibold text-foreground font-mono">{form.submissionsCount}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-muted-foreground">
+                    <span className="text-[11px]">Ledger Dataset</span>
+                    <span className="font-medium text-indigo-600 truncate max-w-[170px]" title={form.ledger}>
+                      {form.ledger}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-muted-foreground">
+                    <span className="text-[11px]">OCR Engine</span>
+                    <span className="font-medium text-foreground">
+                      {form.ocrRequired ? 'Enabled (Tesseract)' : 'Disabled'}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
             </div>
+
+            <CardFooter className="p-5 pt-0 border-t border-border/60 flex items-center justify-between">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleCopyLink(form.id)}
+                className="text-xs h-7.5 px-2 text-muted-foreground hover:text-foreground"
+              >
+                <Copy className="w-3 h-3 mr-1" />
+                <span>Link</span>
+              </Button>
+
+              <div className="flex items-center gap-2">
+                <Link to={`/admin/forms/create?edit=${form.id}`}>
+                  <Button variant="outline" size="sm" className="text-xs h-7.5 px-2.5">
+                    <Edit3 className="w-3 h-3 mr-1" />
+                    <span>Edit</span>
+                  </Button>
+                </Link>
+                <Link to="/admin/submissions">
+                  <Button variant="secondary" size="sm" className="text-xs h-7.5 px-2.5">
+                    Submissions
+                  </Button>
+                </Link>
+              </div>
+            </CardFooter>
           </Card>
         ))}
       </div>
 
       {filteredForms.length === 0 && (
-        <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center bg-white">
-          <FileText className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-          <h3 className="text-base font-semibold text-slate-800">No forms match your search</h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            Try adjusting your search query or reset the filter to view all available forms.
+        <Card className="border-dashed border-2 border-border p-12 text-center bg-card/50">
+          <FileText className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+          <h3 className="text-sm font-semibold text-foreground">No forms match your search</h3>
+          <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto">
+            Try adjusting your search query or reset the filter to view all available dynamic forms.
           </p>
           <Button
             variant="outline"
             size="sm"
-            className="mt-4"
+            className="mt-4 text-xs h-8"
             onClick={() => {
               setSearchQuery('');
               setSelectedFilter('ALL');
@@ -240,7 +265,7 @@ export default function FormsPage() {
           >
             Clear Filters
           </Button>
-        </div>
+        </Card>
       )}
     </div>
   );
