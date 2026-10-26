@@ -2,8 +2,8 @@ import React from 'react';
 
 /**
  * Common Card Component
- * Designed for ease of extension by Gauri Upadhyay's UI Design System.
- *
+ * Part of SynapseForms Design System.
+ */
  * @param {React.ReactNode} [title]
  * @param {React.ReactNode} [subtitle]
  * @param {React.ReactNode} [action]

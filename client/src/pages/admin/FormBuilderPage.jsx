@@ -530,7 +530,7 @@ export default function FormBuilderPage() {
                   className="text-xs text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1.5 pt-0.5"
                 >
                   <Database className="w-3.5 h-3.5" />
-                  <span>Manage Datasets (Gauri's module)</span>
+                  <span>Manage Reference Datasets</span>
                 </Link>
               </CardContent>
             </Card>

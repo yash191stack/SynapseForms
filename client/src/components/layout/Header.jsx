@@ -187,15 +187,15 @@ export default function Header({
             <Button variant="ghost" size="sm" className="h-8 gap-2 pl-1 pr-2 hover:bg-muted/60">
               <Avatar className="h-6 w-6 ring-1 ring-border">
                 <AvatarFallback className="bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white text-[10px] font-bold">
-                  SS
+                  AD
                 </AvatarFallback>
               </Avatar>
               <div className="hidden md:flex flex-col text-left">
                 <span className="text-xs font-semibold text-foreground leading-none">
-                  Shresht Soni
+                  Admin User
                 </span>
                 <span className="text-[10px] text-muted-foreground leading-tight mt-0.5">
-                  Frontend
+                  Platform Console
                 </span>
               </div>
             </Button>
@@ -203,9 +203,9 @@ export default function Header({
           <DropdownMenuContent align="end" className="w-52 text-xs">
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-xs font-semibold text-foreground">Shresht Soni</p>
+                <p className="text-xs font-semibold text-foreground">Admin User</p>
                 <p className="text-[11px] text-muted-foreground truncate">
-                  shresht@synapseforms.org
+                  admin@synapseforms.org
                 </p>
               </div>
             </DropdownMenuLabel>

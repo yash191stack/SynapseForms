@@ -3,8 +3,8 @@ import React from 'react';
 /**
  * Common Badge Component
  * Also supports SynapseForms verification states (VERIFIED, FLAGGED, INVALID, PENDING).
- * Designed for ease of extension by Gauri Upadhyay's UI Design System.
- *
+ * Part of SynapseForms Design System.
+ */
  * @param {'default' | 'success' | 'warning' | 'danger' | 'info' | 'purple' | 'neutral'} [variant='default']
  * @param {'sm' | 'md'} [size='sm']
  * @param {boolean} [dot=false]

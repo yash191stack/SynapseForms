@@ -2,9 +2,8 @@ import React from 'react';
 
 /**
  * Common Input Component
- * Designed for ease of extension by Gauri Upadhyay's UI Design System.
- *
- * @param {string} [label]
+ * Part of SynapseForms Design System.
+ */
  * @param {string} [error]
  * @param {string} [helperText]
  * @param {React.ReactNode} [icon]

@@ -3,9 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { Database, Inbox, FileText, Sparkles, ArrowLeft, Layers, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 
-export default function PlaceholderPage({ title, description, moduleName, assignedTo = 'Gauri Upadhyay' }) {
+export default function PlaceholderPage({ title, description, moduleName, status = 'Phase 2 Module' }) {
   const location = useLocation();
 
   return (
@@ -16,8 +16,8 @@ export default function PlaceholderPage({ title, description, moduleName, assign
         </div>
 
         <div className="flex justify-center mb-2">
-          <Badge variant="warning" className="text-xs">
-            Assigned to: {assignedTo}
+          <Badge variant="secondary" className="text-xs">
+            {status}
           </Badge>
         </div>
 
@@ -27,7 +27,7 @@ export default function PlaceholderPage({ title, description, moduleName, assign
 
         <p className="mt-2 text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
           {description ||
-            'This page is part of the second frontend phase (UI Design System & Ledger/Submission workflows) assigned to Gauri Upadhyay.'}
+            'This module is scheduled for the next release phase for automated ledger verification and submission auditing.'}
         </p>
 
         <div className="mt-6 p-4 rounded-lg bg-muted/40 border border-border/60 text-left max-w-md mx-auto space-y-2 text-xs">
@@ -37,7 +37,7 @@ export default function PlaceholderPage({ title, description, moduleName, assign
           </div>
           <div className="flex items-center justify-between text-muted-foreground font-mono">
             <span>Design System:</span>
-            <span className="text-indigo-600 font-semibold">shadcn/ui + Emil Tokens Ready</span>
+            <span className="text-indigo-600 font-semibold">shadcn/ui Design System Ready</span>
           </div>
           <div className="flex items-center justify-between text-muted-foreground font-mono">
             <span>Backend Integration:</span>

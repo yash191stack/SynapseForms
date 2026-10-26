@@ -42,7 +42,7 @@ export default function AppRoutes() {
           element={
             <PlaceholderPage
               title="Public Form View"
-              description="End-user responsive form answering and document upload interface. Assigned to Gauri Upadhyay."
+              description="End-user responsive form answering and document upload interface."
               moduleName="Public Form"
             />
           }
@@ -59,13 +59,13 @@ export default function AppRoutes() {
         <Route path="forms" element={<FormsPage />} />
         <Route path="forms/create" element={<FormBuilderPage />} />
 
-        {/* Coordination with Gauri: Ledger and Submissions routes */}
+        {/* Master Ledger and Submissions routes */}
         <Route
           path="ledger"
           element={
             <PlaceholderPage
               title="Master Ledger Module"
-              description="CSV / Excel reference dataset management, record mapping, and schema matching engine. Assigned to Gauri Upadhyay."
+              description="CSV / Excel reference dataset management, record mapping, and schema matching engine."
               moduleName="Master Ledger"
             />
           }
@@ -75,7 +75,7 @@ export default function AppRoutes() {
           element={
             <PlaceholderPage
               title="Submissions Listing & Review"
-              description="Full verification queue with OCR confidence filtering, status triage, and batch approval. Assigned to Gauri Upadhyay."
+              description="Full verification queue with OCR confidence filtering, status triage, and batch approval."
               moduleName="Submissions Listing"
             />
           }
@@ -85,7 +85,7 @@ export default function AppRoutes() {
           element={
             <PlaceholderPage
               title="Submission Audit Details"
-              description="Deep-dive comparison between form inputs, OCR extracted tokens, and master ledger rows. Assigned to Gauri Upadhyay."
+              description="Deep-dive comparison between form inputs, OCR extracted tokens, and master ledger rows."
               moduleName="Submission Details"
             />
           }

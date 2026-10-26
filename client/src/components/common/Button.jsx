@@ -3,8 +3,8 @@ import { Loader2 } from 'lucide-react';
 
 /**
  * Common Button Component
- * Designed for ease of extension by Gauri Upadhyay's UI Design System.
- *
+ * Part of SynapseForms Design System.
+ */
  * @param {'primary' | 'secondary' | 'outline' | 'danger' | 'ghost' | 'success'} [variant='primary']
  * @param {'sm' | 'md' | 'lg'} [size='md']
  * @param {boolean} [loading=false]

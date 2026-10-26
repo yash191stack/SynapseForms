@@ -47,15 +47,15 @@ export default function Sidebar({ isOpen, onClose }) {
       name: 'Master Ledger',
       to: '/admin/ledger',
       icon: Database,
-      badge: 'Gauri',
-      badgeVariant: 'warning',
+      badge: 'Ledger',
+      badgeVariant: 'secondary',
     },
     {
       name: 'Submissions',
       to: '/admin/submissions',
       icon: Inbox,
-      badge: 'Gauri',
-      badgeVariant: 'warning',
+      badge: 'Audit',
+      badgeVariant: 'secondary',
     },
   ];
 
@@ -227,8 +227,8 @@ export default function Sidebar({ isOpen, onClose }) {
               </Badge>
             </div>
             <p className="text-[11px] text-muted-foreground leading-snug">
-              Frontend: Shresht Soni<br />
-              Design System: Gauri Upadhyay
+              Verification Engine v1.0<br />
+              Status: Operational
             </p>
           </div>
         </div>

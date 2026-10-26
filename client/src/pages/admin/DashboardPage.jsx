@@ -275,14 +275,14 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Subsystem Architecture & Team Roadmap */}
+        {/* Subsystem Architecture & Modules */}
         <Card className="lg:col-span-2 border-border/70 p-5">
           <CardHeader className="p-0 pb-4">
             <CardTitle className="text-sm font-bold text-foreground">
-              Module Architecture & Team Coordination
+              Module Architecture & Verification Pipelines
             </CardTitle>
             <CardDescription className="text-xs text-muted-foreground">
-              Collaborative modules across Shresht (Frontend), Yash (Backend), and Gauri (Design System)
+              Integrated form management, reference datasets, and automated verification services
             </CardDescription>
           </CardHeader>
 
@@ -291,14 +291,14 @@ export default function DashboardPage() {
               <div className="rounded-lg border border-border/70 bg-card p-3.5 shadow-2xs">
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs font-bold text-foreground">
-                    Frontend Foundation
+                    Dynamic Form Engine
                   </span>
                   <Badge variant="purple" className="text-[10px]">
-                    Shresht Soni
+                    Core
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
-                  Landing, Login, Dashboard, Forms Directory, and Interactive Form Builder.
+                  Dynamic schema configuration, field-level constraints, and interactive builder.
                 </p>
                 <div className="flex gap-2">
                   <Link to="/admin/forms">
@@ -317,14 +317,14 @@ export default function DashboardPage() {
               <div className="rounded-lg border border-border/70 bg-card p-3.5 shadow-2xs">
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs font-bold text-foreground">
-                    Design System & Review
+                    Master Data & Ledger
                   </span>
-                  <Badge variant="warning" className="text-[10px]">
-                    Gauri Upadhyay
+                  <Badge variant="secondary" className="text-[10px]">
+                    Phase 2
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
-                  Master Ledger, Public Form View, Submissions List & Audit Details.
+                  Reference dataset matching, OCR extraction verification, and submission audits.
                 </p>
                 <div className="flex gap-2">
                   <Link to="/admin/ledger">
@@ -346,7 +346,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5 font-medium text-[11px]">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                Backend Foundation: Completed by Yash Sharma (`server/` Express + Mongo)
+                Backend Services: Node.js Express REST API & MongoDB Database
               </span>
               <span className="font-mono text-[10px] text-muted-foreground">
                 API Base: /api

@@ -1,16 +1,17 @@
 # SynapseForms — Frontend Foundation
 
-Frontend workspace for **SynapseForms** (Dynamic Form Builder & Verification Platform), established by **Shresht Soni** for pair collaboration with **Gauri Upadhyay** (UI Design System) and **Yash Sharma** (Backend Foundation).
+Frontend workspace for **SynapseForms** (Intelligent Dynamic Form Builder & Verification Platform). Built with React 19, Vite, shadcn/ui, and Tailwind CSS.
 
 ---
 
 ## 1. Tech Stack
 
 - **Framework**: React 19 + Vite 8
+- **UI & Components**: shadcn/ui + Radix UI + Lucide React
 - **Styling**: Tailwind CSS v4 (`@tailwindcss/vite`)
 - **Routing**: React Router DOM v7
-- **Icons**: Lucide React
-- **Typography**: Plus Jakarta Sans & JetBrains Mono
+- **Toasts**: Sonner (Emil Kowalski Design)
+- **Typography**: Plus Jakarta Sans & Geist
 
 ---
 
@@ -37,21 +38,21 @@ npm run preview
 
 ## 3. Implemented Routes & Pages
 
-| Route | Page Component | Layout | Assigned To | Status |
-|---|---|---|---|---|
-| `/` | `LandingPage.jsx` | `PublicLayout` | Shresht Soni | **Complete** |
-| `/admin/login` | `LoginPage.jsx` | Standalone | Shresht Soni | **Complete** |
-| `/admin/dashboard` | `DashboardPage.jsx` | `AdminLayout` | Shresht Soni | **Complete** |
-| `/admin/forms` | `FormsPage.jsx` | `AdminLayout` | Shresht Soni | **Complete** |
-| `/admin/forms/create` | `FormBuilderPage.jsx` | `AdminLayout` | Shresht Soni | **Complete** |
-| `/admin/ledger` | `PlaceholderPage.jsx` | `AdminLayout` | Gauri Upadhyay | Hand-off Ready |
-| `/admin/submissions` | `PlaceholderPage.jsx` | `AdminLayout` | Gauri Upadhyay | Hand-off Ready |
-| `/admin/submissions/:id` | `PlaceholderPage.jsx` | `AdminLayout` | Gauri Upadhyay | Hand-off Ready |
-| `/forms/:formId` | `PlaceholderPage.jsx` | `PublicLayout` | Gauri Upadhyay | Hand-off Ready |
+| Route | Page Component | Layout | Status |
+|---|---|---|---|
+| `/` | `LandingPage.jsx` | `PublicLayout` | **Complete** |
+| `/admin/login` | `LoginPage.jsx` | Standalone | **Complete** |
+| `/admin/dashboard` | `DashboardPage.jsx` | `AdminLayout` | **Complete** |
+| `/admin/forms` | `FormsPage.jsx` | `AdminLayout` | **Complete** |
+| `/admin/forms/create` | `FormBuilderPage.jsx` | `AdminLayout` | **Complete** |
+| `/admin/ledger` | `PlaceholderPage.jsx` | `AdminLayout` | Phase 2 Ready |
+| `/admin/submissions` | `PlaceholderPage.jsx` | `AdminLayout` | Phase 2 Ready |
+| `/admin/submissions/:id` | `PlaceholderPage.jsx` | `AdminLayout` | Phase 2 Ready |
+| `/forms/:formId` | `PlaceholderPage.jsx` | `PublicLayout` | Phase 2 Ready |
 
 ---
 
-## 4. Shared Common Component Conventions (For Gauri Upadhyay)
+## 4. UI Design System & Component Conventions
 
 All common components live in `src/components/common/`:
 
