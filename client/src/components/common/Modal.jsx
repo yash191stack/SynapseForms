@@ -170,3 +170,4 @@ Modal.Footer = function ModalFooter({ children, className = '' }) {
     </div>
   );
 };
+

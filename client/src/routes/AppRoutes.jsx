@@ -57,7 +57,7 @@ export default function AppRoutes() {
         <Route path="forms" element={<FormsPage />} />
         <Route path="forms/create" element={<FormBuilderPage />} />
 
-        {/* Master Ledger and Submissions routes (Assigned to Gauri Upadhyay) */}
+        {/* Master Ledger and Submissions routes */}
         <Route path="ledger" element={<MasterLedgerPage />} />
         <Route path="submissions" element={<SubmissionsPage />} />
         <Route path="submissions/:id" element={<SubmissionDetailsPage />} />

@@ -134,8 +134,8 @@ export default function ComponentShowcasePage() {
           Reusable UI Component Showcase
         </h1>
         <p className="text-sm text-muted-foreground mt-1.5 max-w-3xl leading-relaxed">
-          Comprehensive reference guide and interactive playground for all 8 core design tokens and
-          reusable frontend components created by Gauri Upadhyay for the SynapseForms platform.
+          Comprehensive reference guide and interactive playground for all core design tokens and
+          reusable frontend components for the SynapseForms platform.
         </p>
       </div>
 
