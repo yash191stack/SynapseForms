@@ -5,13 +5,17 @@ import AdminLayout from '../layouts/AdminLayout';
 
 // Public pages
 import LandingPage from '../pages/public/LandingPage';
+import PublicFormPage from '../pages/public/PublicFormPage';
 
 // Admin pages
 import LoginPage from '../pages/admin/LoginPage';
 import DashboardPage from '../pages/admin/DashboardPage';
 import FormsPage from '../pages/admin/FormsPage';
 import FormBuilderPage from '../pages/admin/FormBuilderPage';
-import PlaceholderPage from '../pages/admin/PlaceholderPage';
+import MasterLedgerPage from '../pages/admin/MasterLedgerPage';
+import SubmissionsPage from '../pages/admin/SubmissionsPage';
+import SubmissionDetailsPage from '../pages/admin/SubmissionDetailsPage';
+import ComponentShowcasePage from '../pages/admin/ComponentShowcasePage';
 
 // 404 NotFound
 import { Button } from '@/components/ui/button';
@@ -37,16 +41,10 @@ export default function AppRoutes() {
       {/* Public Layout Routes */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<LandingPage />} />
-        <Route
-          path="/forms/:formId"
-          element={
-            <PlaceholderPage
-              title="Public Form View"
-              description="End-user responsive form answering and document upload interface."
-              moduleName="Public Form"
-            />
-          }
-        />
+        {/* Support both /form/:formId and legacy /forms/:formId */}
+        <Route path="/form/:formId" element={<PublicFormPage />} />
+        <Route path="/forms/:formId" element={<PublicFormPage />} />
+        <Route path="/showcase" element={<ComponentShowcasePage />} />
       </Route>
 
       {/* Standalone Admin Auth Route */}
@@ -59,37 +57,13 @@ export default function AppRoutes() {
         <Route path="forms" element={<FormsPage />} />
         <Route path="forms/create" element={<FormBuilderPage />} />
 
-        {/* Master Ledger and Submissions routes */}
-        <Route
-          path="ledger"
-          element={
-            <PlaceholderPage
-              title="Master Ledger Module"
-              description="CSV / Excel reference dataset management, record mapping, and schema matching engine."
-              moduleName="Master Ledger"
-            />
-          }
-        />
-        <Route
-          path="submissions"
-          element={
-            <PlaceholderPage
-              title="Submissions Listing & Review"
-              description="Full verification queue with OCR confidence filtering, status triage, and batch approval."
-              moduleName="Submissions Listing"
-            />
-          }
-        />
-        <Route
-          path="submissions/:id"
-          element={
-            <PlaceholderPage
-              title="Submission Audit Details"
-              description="Deep-dive comparison between form inputs, OCR extracted tokens, and master ledger rows."
-              moduleName="Submission Details"
-            />
-          }
-        />
+        {/* Master Ledger and Submissions routes (Assigned to Gauri Upadhyay) */}
+        <Route path="ledger" element={<MasterLedgerPage />} />
+        <Route path="submissions" element={<SubmissionsPage />} />
+        <Route path="submissions/:id" element={<SubmissionDetailsPage />} />
+
+        {/* UI Design System Showcase */}
+        <Route path="showcase" element={<ComponentShowcasePage />} />
       </Route>
 
       {/* Fallback 404 */}

@@ -57,6 +57,13 @@ export default function Sidebar({ isOpen, onClose }) {
       badge: 'Audit',
       badgeVariant: 'secondary',
     },
+    {
+      name: 'UI Showcase',
+      to: '/admin/showcase',
+      icon: Sparkles,
+      badge: 'Showcase',
+      badgeVariant: 'purple',
+    },
   ];
 
   return (
