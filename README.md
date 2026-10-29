@@ -6,6 +6,46 @@ SynapseForms is a dynamic form-building and submission verification platform tha
 
 It combines customizable forms, rule-based validation, master data matching, and OCR-powered document analysis to improve the accuracy and reliability of digital submissions.
 
+## 🚀 Getting Started
+
+### First-time setup (sirf ek baar)
+
+```bash
+# 1. Project root pe jao
+cd SynapseForms
+
+# 2. Saari dependencies install karo (root + server + client)
+npm run setup
+```
+
+### Roz project start karna (ek hi command)
+
+```bash
+# Project root (SynapseForms/) se chalao
+npm run dev
+```
+
+> Yeh ek saath **Server** (nodemon) aur **Client** (Vite) dono start kar dega.
+
+| Service | URL |
+|---------|-----|
+| 🖥️ Client (React) | http://localhost:5173 |
+| ⚙️ Server (Express) | http://localhost:5000 |
+
+### Alag alag start karna ho to
+
+```bash
+# Terminal 1 — Server
+cd server
+npm run dev
+
+# Terminal 2 — Client
+cd client
+npm run dev
+```
+
+---
+
 ## Features
 
 - **Dynamic Form Builder:** Create custom forms with configurable fields, validation rules, and required inputs.
